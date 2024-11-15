@@ -1,0 +1,28 @@
+{
+  "name": "intellisense-analyzer",
+  "version": "0.0.1",
+  "description": "A tool for analyzing typescript intellisense performance.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phillipb/intellisense-analyzer.git"
+  },
+  "keywords": [
+    "intellisense",
+    "typescript"
+  ],
+  "author": "Phillip Burch",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/phillipb/intellisense-analyzer/issues"
+  },
+  "homepage": "https://github.com/phillipb/intellisense-analyzer#readme",
+  "devDependencies": {
+   "pidusage": "^3.0.2",
+    "@typescript/server-harness": "^0.3.5",
+    "commander": "^12.1.0"
+  }
+}
