@@ -1,4 +1,3 @@
-import utils from "../../../api/utilities.js";
 import fs from "fs";
 
 export const openFiles = async (server, seq, filePaths) => {

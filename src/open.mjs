@@ -8,11 +8,13 @@ import { harnessUtils } from "./utils/index.mjs";
 import { openFiles } from "./steps/open-files.mjs";
 import { createServer } from "./utils/create-server.mjs";
 import { getStats } from "./utils/telemetry.mjs";
+import { formatTable, startProgress } from "./utils/formatter.mjs";
 
 /**
  * @param {string} file
  */
-async function main(projectRoot, file, tsserverPath, tsserverMaxOldSpaceSize) {
+async function main(projectRoot, file, tsserverPath, tsserverMaxOldSpaceSize, format) {
+  const stopProgress = startProgress();
   const server = createServer(
     tsserverPath,
     true,
@@ -20,7 +22,6 @@ async function main(projectRoot, file, tsserverPath, tsserverMaxOldSpaceSize) {
     tsserverMaxOldSpaceSize
   );
 
-  const { logMemory } = harnessUtils(server);
   let seq = 1;
 
   await server.message({
@@ -62,9 +63,13 @@ async function main(projectRoot, file, tsserverPath, tsserverMaxOldSpaceSize) {
   });
 
   stats.fileCount = resp.body.fileNames.length;
-
+  stopProgress();
   // write stats data
-  console.log(stats);
+  if (format === 'json') {
+    console.log(stats);
+  } else {
+    formatTable(stats);
+  }
   await server.exitOrKill(1);
 }
 
@@ -81,7 +86,7 @@ program
     "Path to tsserver.js",
     path.join(process.cwd(), "node_modules", "typescript", "lib", "tsserver.js")
   )
-  .option("-f", "Style of format of the output", "json")
+  .option("-f, --format <format>", "Style of format of the output", "json")
   .action(file => {
     const options = program.opts();
 
@@ -89,7 +94,8 @@ program
       options.project,
       path.resolve(options.project, file),
       options.tsserverPath,
-      options.tsserverMaxOldSpaceSize
+      options.tsserverMaxOldSpaceSize,
+      options.format
     ).catch(e => console.error(e));
   });
 
